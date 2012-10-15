@@ -38,6 +38,10 @@ function markdown_image_field_attach_presave($entity_type, $entity) {
     }
     
     foreach ($items as $key => $item) {
+      if (empty($entity->{$instance['field_name']}[$language][$key]['value'])) {
+        continue;
+      }
+
       $image_fields = markdown_image_get_image_fields($entity_type, $entity);
       $parser = new MarkdownImageFieldParser($entity_type, $entity, $image_fields);
       $text = $entity->{$instance['field_name']}[$language][$key]['value'];
@@ -68,7 +72,12 @@ function markdown_image_field_attach_form($entity_type, $entity, &$form, &$form_
 
     foreach ($items as $key => $item) {
       $field_name = $instance['field_name'];
-      $form[$field_name][$langcode][$key]['#default_value'] = preg_replace_callback('@\[markdown_image:(.+?)\]@', '_markdown_image_revert_tag', $entity->{$instance['field_name']}[$langcode][$key]['value']);
+      if (isset($entity->{$instance['field_name']}[$langcode][$key]['value'])) {
+        $form[$field_name][$langcode][$key]['#default_value'] = preg_replace_callback('@\[markdown_image:(.+?)\]@', '_markdown_image_revert_tag', $entity->{$instance['field_name']}[$langcode][$key]['value']);
+      }
+      else {
+        $form[$field_name][$langcode][$key]['#default_value'] = '';
+      }
     }
   }
 }
@@ -106,6 +115,9 @@ function markdown_image_entity_view_alter(&$build) {
     }
     
     foreach ($items as $key => $item) {
+      if (!isset($item['value'])) {
+        return;
+      }
       preg_match_all('@\[markdown_image:(.+?)\]@', $item['value'], $matches);
       if (!isset($matches[1][0])) {
         return;
