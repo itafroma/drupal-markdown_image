@@ -74,20 +74,15 @@ function markdown_image_field_attach_form($entity_type, $entity, &$form, &$form_
       continue;
     }
     
-    $items = field_get_items($entity_type, $entity, $instance['field_name']);
+    $field_name = $instance['field_name'];
+    $items = field_get_items($entity_type, $entity, $field_name);
 
     if (!is_array($items)) {
       continue;
     }
 
     foreach ($items as $key => $item) {
-      $field_name = $instance['field_name'];
-      if (isset($entity->{$instance['field_name']}[$langcode][$key]['value'])) {
-        $form[$field_name][$langcode][$key]['#default_value'] = preg_replace_callback('@\[markdown_image:(.+?)\]@', '_markdown_image_revert_tag', $entity->{$instance['field_name']}[$langcode][$key]['value']);
-      }
-      else {
-        $form[$field_name][$langcode][$key]['#default_value'] = '';
-      }
+      $form[$field_name][$langcode][$key]['#default_value'] = preg_replace_callback('@\[markdown_image:(.+?)\]@', '_markdown_image_revert_tag', $entity->{$field_name}[$langcode][$key]['value']);
     }
   }
 }
