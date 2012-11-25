@@ -56,10 +56,20 @@ function markdown_image_field_attach_presave($entity_type, $entity) {
  * Implements hook_node_prepare().
  */
 function markdown_image_field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode) {
-  $bundle = field_extract_bundle($entity_type, $entity);
-  $instances = field_info_instances($entity_type, $bundle);
+  // Bundle-less entity types use the entity type as the bundle name.
+  if ($bundle = field_extract_bundle($entity_type, $entity)) {
+    $instances = field_info_instances($entity_type, $bundle);
+  }
+  else {
+    $instances = field_info_instances($entity_type, $entity_type);
+  }
 
   foreach ($instances as $name => $instance) {
+    // Only care about text fields.
+    if (!in_array($instance['widget']['type'], array('text_textfield', 'text_textarea', 'text_textarea_with_summary'))) {
+      continue;
+    }
+
     if (!(isset($instance['settings']['text_processing']) && $instance['settings']['text_processing'])) {
       continue;
     }
