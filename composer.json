@@ -1,0 +1,27 @@
+{
+    "name": "itafroma/drupal-markdown_image",
+    "description": "Provides shorthand to allow easy use of image fields in Markdown.",
+    "type": "drupal-module",
+    "keywords": ["drupal", "markdown"],
+    "homepage": "https://github.com/itafroma/drupal-markdown_image",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Mark Trapp",
+            "email": "mark@marktrapp.com",
+            "homepage": "http://marktrapp.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/itafroma/drupal-markdown_image/issues",
+        "source": "https://github.com/itafroma/drupal-markdown_image"
+    },
+    "require": {
+        "php": ">=5.2.5",
+        "composer/installers": "~1.0"
+    },
+    "extra": {
+        "installer-name": "markdown_image"
+    }
+}
