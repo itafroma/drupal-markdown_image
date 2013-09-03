@@ -25,7 +25,7 @@ function markdown_image_field_attach_presave($entity_type, $entity) {
   $language = isset($entity->language) ? $entity->language : LANGUAGE_NONE;
   $bundle = field_extract_bundle($entity_type, $entity);
   $instances = field_info_instances($entity_type, $bundle);
-  
+
   foreach ($instances as $name => $instance) {
     if (!(isset($instance['settings']['text_processing']) && $instance['settings']['text_processing'])) {
       continue;
@@ -36,7 +36,7 @@ function markdown_image_field_attach_presave($entity_type, $entity) {
     if (!is_array($items)) {
       continue;
     }
-    
+
     foreach ($items as $key => $item) {
       if (empty($entity->{$instance['field_name']}[$language][$key]['value'])) {
         continue;
@@ -73,7 +73,7 @@ function markdown_image_field_attach_form($entity_type, $entity, &$form, &$form_
     if (!(isset($instance['settings']['text_processing']) && $instance['settings']['text_processing'])) {
       continue;
     }
-    
+
     $field_name = $instance['field_name'];
     $items = field_get_items($entity_type, $entity, $field_name);
 
@@ -105,10 +105,10 @@ function markdown_image_entity_view_alter(&$build) {
     if (!(is_array($property) && isset($property['#field_name']))) {
       continue;
     }
-    
+
     $item_field_name = $property['#field_name'];
     $instance = field_info_instance($entity_type, $item_field_name, $bundle);
-    
+
     if (!(isset($instance['settings']['text_processing']) && $instance['settings']['text_processing'])) {
       continue;
     }
@@ -118,11 +118,12 @@ function markdown_image_entity_view_alter(&$build) {
     if (!is_array($items)) {
       continue;
     }
-    
+
     foreach ($items as $key => $item) {
       if (!isset($item['value'])) {
         return;
       }
+
       preg_match_all('@\[markdown_image:(.+?)\]@', $item['value'], $matches);
       if (!isset($matches[1][0])) {
         return;
@@ -131,7 +132,7 @@ function markdown_image_entity_view_alter(&$build) {
       $text = $build[$item_field_name][$key]['#markup'];
       foreach ($matches[1] as $match_key => $match) {
         list($entity_type, $entity_id, $field_name, $index, $alt_text) = explode(':', $match);
-        
+
         if (!isset($build[$field_name])) {
           $replace = '';
         }
@@ -210,9 +211,11 @@ function _markdown_image_revert_tag($matches) {
   $alt_text = $attributes[4];
   $field_name = $attributes[2];
   $index = $attributes[3] + 1;
+
   return '![' . $alt_text . '](' . $field_name . ':' . $index . ')';
 }
 
 function markdown_image_filter_markdown_image_process($text, $filter, $format, $langcode, $cache, $cache_id) {
+
   return $text;
 }
